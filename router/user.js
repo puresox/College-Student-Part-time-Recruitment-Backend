@@ -67,10 +67,11 @@ router
     const userid = ctx.cookies.get('userid');
     const { img } = ctx.request.body;
     const dataBuffer = Buffer.from(img, 'base64');
-    const imgPath = path.resolve(__dirname, `../public/img/${uuidv1()}.jpg`);
+    const imgname = `${uuidv1()}.jpg`;
+    const imgPath = path.resolve(__dirname, `../public/img/${imgname}`);
     fs.writeFileSync(imgPath, dataBuffer);
     await userModel
-      .updateImgById(userid, imgPath)
+      .updateImgById(userid, imgname)
       .then(() => {
         ctx.body = {
           success: true,
