@@ -5,4 +5,8 @@ module.exports = {
     const result = await User.create({ nickname, pw });
     return result;
   },
+  findByNickname: async (nickname) => {
+    const result = await User.findOne({ nickname });
+    return result;
+  },
 };
