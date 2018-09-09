@@ -23,7 +23,8 @@
     "koa-static": "^5.0.0",
     "log4js": "^3.0.5",
     "mongoose": "^5.2.13",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
