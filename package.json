@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/puresox/College-Student-Part-time-Recruitment-Backend#readme",
   "dependencies": {
-    "@koa/cors": "^2.2.2",
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
     "log4js": "^3.0.5",
     "mongoose": "^5.2.14",
     "socket.io": "^2.1.1",
