@@ -2,7 +2,6 @@ const Router = require('koa-router');
 const uuidv1 = require('uuid/v1');
 const fs = require('fs');
 const path = require('path');
-const userModel = require('../service/user');
 const companyModel = require('../service/company');
 const { checkHasSignIn } = require('../middleware/check');
 
@@ -11,31 +10,14 @@ const router = new Router();
 router.use(checkHasSignIn);
 
 router
-  .get('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
-    await userModel
-      .findById(userid)
-      .then((user) => {
-        ctx.body = {
-          success: true,
-          msg: user,
-        };
-      })
-      .catch(({ message }) => {
-        ctx.body = {
-          success: false,
-          msg: message,
-        };
-      });
-  })
-  .get('/company', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+  .get('/:id', async (ctx) => {
+    const companyId = ctx.params.id;
     await companyModel
-      .findByAdmin(userid)
-      .then((companies) => {
+      .findById(companyId)
+      .then((company) => {
         ctx.body = {
           success: true,
-          msg: companies,
+          msg: company,
         };
       })
       .catch(({ message }) => {
@@ -48,30 +30,22 @@ router
   .post('/', async (ctx) => {
     const userid = ctx.cookies.get('userid');
     const {
-      phone,
-      name,
-      sex,
-      college,
-      specialty,
-      graduationTime,
-      birthday,
-      email,
+      name, type, introduction, scope, specialty, city,
     } = ctx.request.body;
-    await userModel
-      .updateInfoById(userid, {
-        phone,
+    await companyModel
+      .create({
         name,
-        sex,
-        college,
+        type,
+        introduction,
+        scope,
         specialty,
-        graduationTime,
-        birthday,
-        email,
+        city,
+        admin: userid,
       })
       .then(() => {
         ctx.body = {
           success: true,
-          msg: '更新成功',
+          msg: '创建成功',
         };
       })
       .catch(({ message }) => {
@@ -81,15 +55,43 @@ router
         };
       });
   })
-  .post('/img', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
-    const { img } = ctx.request.body;
-    const dataBuffer = Buffer.from(img, 'base64');
+  .post('/businessLicence', async (ctx) => {
+    const { id, businessLicence } = ctx.request.body;
+    const dataBuffer = Buffer.from(businessLicence, 'base64');
     const imgname = `${uuidv1()}.jpg`;
     const imgPath = path.resolve(__dirname, `../public/img/${imgname}`);
     fs.writeFileSync(imgPath, dataBuffer);
-    await userModel
-      .updateImgById(userid, imgname)
+    await companyModel
+      .updateBusinessLicenceById(id, {
+        businessLicence: imgname,
+        status: true,
+      })
+      .then(() => {
+        ctx.body = {
+          success: true,
+          msg: '上传成功',
+        };
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .put('/', async (ctx) => {
+    const {
+      id, name, type, introduction, scope, specialty, city,
+    } = ctx.request.body;
+    await companyModel
+      .updateCompanyById(id, {
+        name,
+        type,
+        introduction,
+        scope,
+        specialty,
+        city,
+      })
       .then(() => {
         ctx.body = {
           success: true,
