@@ -3,6 +3,7 @@ const uuidv1 = require('uuid/v1');
 const fs = require('fs');
 const path = require('path');
 const companyModel = require('../service/company');
+const jobModel = require('../service/job');
 const { checkHasSignIn } = require('../middleware/check');
 
 const router = new Router();
@@ -97,6 +98,169 @@ router
           success: true,
           msg: '更新成功',
         };
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .get('/:id/job', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    const companyId = ctx.params.id;
+    await companyModel
+      .findById(companyId)
+      .then(async (company) => {
+        if (company.admin.toString() !== userid) {
+          ctx.body = {
+            success: false,
+            msg: '权限不足',
+          };
+        } else {
+          await jobModel
+            .findByCompany(companyId)
+            .then((jobs) => {
+              ctx.body = {
+                success: true,
+                msg: jobs,
+              };
+            })
+            .catch(({ message }) => {
+              ctx.body = {
+                success: false,
+                msg: message,
+              };
+            });
+        }
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .post('/:id/job', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    const companyId = ctx.params.id;
+    const {
+      name, add, amount, salaryMin, salaryMax, jobInfo, location,
+    } = ctx.request.body;
+    await companyModel
+      .findById(companyId)
+      .then(async (company) => {
+        if (company.admin.toString() !== userid) {
+          ctx.body = {
+            success: false,
+            msg: '权限不足',
+          };
+        } else {
+          await jobModel
+            .create({
+              name,
+              add,
+              amount,
+              salaryMin,
+              salaryMax,
+              jobInfo,
+              location,
+              company: companyId,
+            })
+            .then(() => {
+              ctx.body = {
+                success: true,
+                msg: '发布成功',
+              };
+            })
+            .catch(({ message }) => {
+              ctx.body = {
+                success: false,
+                msg: message,
+              };
+            });
+        }
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .put('/:id/job', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    const companyId = ctx.params.id;
+    const {
+      id, name, add, amount, salaryMin, salaryMax, jobInfo, location,
+    } = ctx.request.body;
+    await companyModel
+      .findById(companyId)
+      .then(async (company) => {
+        if (company.admin.toString() !== userid) {
+          ctx.body = {
+            success: false,
+            msg: '权限不足',
+          };
+        } else {
+          await jobModel
+            .updateById(id, {
+              name,
+              add,
+              amount,
+              salaryMin,
+              salaryMax,
+              jobInfo,
+              location,
+            })
+            .then(() => {
+              ctx.body = {
+                success: true,
+                msg: '修改成功',
+              };
+            })
+            .catch(({ message }) => {
+              ctx.body = {
+                success: false,
+                msg: message,
+              };
+            });
+        }
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .del('/:id/job/:jobId', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    const { id: companyId, jobId } = ctx.params;
+    await companyModel
+      .findById(companyId)
+      .then(async (company) => {
+        if (company.admin.toString() !== userid) {
+          ctx.body = {
+            success: false,
+            msg: '权限不足',
+          };
+        } else {
+          await jobModel
+            .deleteById(jobId)
+            .then(() => {
+              ctx.body = {
+                success: true,
+                msg: '删除成功',
+              };
+            })
+            .catch(({ message }) => {
+              ctx.body = {
+                success: false,
+                msg: message,
+              };
+            });
+        }
       })
       .catch(({ message }) => {
         ctx.body = {
