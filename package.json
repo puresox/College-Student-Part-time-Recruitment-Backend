@@ -4,6 +4,7 @@
   "description": "生产实习：大学生兼职招聘app后端",
   "main": "index.js",
   "scripts": {
+    "start": "NODE_ENV=production pm2 start index.js --name 'v'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,12 +18,12 @@
   },
   "homepage": "https://github.com/puresox/College-Student-Part-time-Recruitment-Backend#readme",
   "dependencies": {
-    "koa": "^2.5.2",
+    "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "log4js": "^3.0.5",
-    "mongoose": "^5.2.13",
+    "mongoose": "^5.2.14",
     "socket.io": "^2.1.1",
     "uuid": "^3.3.2"
   },
