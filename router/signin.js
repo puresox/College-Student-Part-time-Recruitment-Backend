@@ -1,7 +1,8 @@
 const Router = require('koa-router');
 const crypto = require('crypto');
 const userModel = require('../service/user');
-const { secret, cookie } = require('../config/config');
+const tokenModel = require('../service/token');
+const { secret } = require('../config/config');
 const { checkNotSignIn } = require('../middleware/check');
 
 const router = new Router();
@@ -16,12 +17,20 @@ router.post('/', async (ctx) => {
     .digest('hex');
   const user = await userModel.findByNickname(nickname);
   if (user && user.pw === hash) {
-    ctx.cookies.set('userid', user.id, cookie);
-    ctx.cookies.set('nickname', user.nickname, cookie);
-    ctx.body = {
-      success: true,
-      msg: '登录成功',
-    };
+    await tokenModel
+      .create(user.id)
+      .then(({ _id: token }) => {
+        ctx.body = {
+          success: true,
+          msg: token,
+        };
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
   } else {
     ctx.body = {
       success: false,

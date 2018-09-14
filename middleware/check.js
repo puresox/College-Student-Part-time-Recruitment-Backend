@@ -1,16 +1,20 @@
+const tokenModel = require('../service/token');
+
 module.exports = {
   checkHasSignIn: async (ctx, next) => {
-    const userid = ctx.cookies.get('userid', { signed: true });
-    if (!userid) {
+    const { token: tokenId } = ctx.header;
+    const token = await tokenModel.findById(tokenId);
+    if (!token) {
       ctx.body = { success: false, msg: '您未登录' };
     } else {
-      ctx.userid = userid;
+      ctx.userid = token.user;
       await next();
     }
   },
   checkNotSignIn: async (ctx, next) => {
-    const userid = ctx.cookies.get('userid', { signed: true });
-    if (userid) {
+    const { token: tokenId } = ctx.header;
+    const token = await tokenModel.findById(tokenId);
+    if (token) {
       ctx.body = { success: false, msg: '您已登录' };
     } else {
       await next();

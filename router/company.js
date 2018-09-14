@@ -30,7 +30,7 @@ router
       });
   })
   .post('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const {
       name, type, introduction, scope, specialty, city,
     } = ctx.request.body;
@@ -108,7 +108,7 @@ router
       });
   })
   .get('/:id/job', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const companyId = ctx.params.id;
     await companyModel
       .findById(companyId)
@@ -143,7 +143,7 @@ router
       });
   })
   .post('/:id/job', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const companyId = ctx.params.id;
     const {
       name, add, amount, salaryMin, salaryMax, jobInfo, location,
@@ -190,7 +190,7 @@ router
       });
   })
   .put('/:id/job', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const companyId = ctx.params.id;
     const {
       id, name, add, amount, salaryMin, salaryMax, jobInfo, location,
@@ -236,7 +236,7 @@ router
       });
   })
   .del('/:id/job/:jobId', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const { id: companyId, jobId } = ctx.params;
     await companyModel
       .findById(companyId)
@@ -271,7 +271,7 @@ router
       });
   })
   .get('/:id/job/:jobId', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const { id: companyId, jobId } = ctx.params;
     await companyModel
       .findById(companyId)
@@ -306,7 +306,7 @@ router
       });
   })
   .post('/:id/job/:jobId/application', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const { id: companyId } = ctx.params;
     const { applicationId, status } = ctx.request.body;
     await companyModel

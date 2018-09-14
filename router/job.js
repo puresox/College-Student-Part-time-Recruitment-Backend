@@ -42,7 +42,7 @@ router
       });
   })
   .post('/application', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const { jobId, resumeId } = ctx.request.body;
     await applicationModel
       .create({

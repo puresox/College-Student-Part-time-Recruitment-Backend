@@ -11,7 +11,7 @@ router.use(checkHasSignIn);
 
 router
   .get('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     await resumeModel
       .findByUser(userid)
       .then((resumes) => {
@@ -28,7 +28,7 @@ router
       });
   })
   .post('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const {
       phone, name, sex, college, specialty, birthday, email, img,
     } = ctx.request.body;
@@ -62,7 +62,7 @@ router
       });
   })
   .put('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const {
       id, phone, name, sex, college, specialty, birthday, email, img,
     } = ctx.request.body;

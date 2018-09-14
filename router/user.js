@@ -13,7 +13,7 @@ router.use(checkHasSignIn);
 
 router
   .get('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     await userModel
       .findById(userid)
       .then((user) => {
@@ -30,7 +30,7 @@ router
       });
   })
   .get('/company', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     await companyModel
       .findByAdmin(userid)
       .then((companies) => {
@@ -47,7 +47,7 @@ router
       });
   })
   .get('/application', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     await applicationModel
       .findByUser(userid)
       .then((applications) => {
@@ -64,7 +64,7 @@ router
       });
   })
   .post('/', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const {
       phone,
       name,
@@ -100,7 +100,7 @@ router
       });
   })
   .post('/img', async (ctx) => {
-    const userid = ctx.cookies.get('userid');
+    const { userid } = ctx;
     const { img } = ctx.request.body;
     const dataBuffer = Buffer.from(img, 'base64');
     const imgname = `${uuidv1()}.jpg`;
