@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const companyModel = require('../service/company');
 const jobModel = require('../service/job');
+const applicationModel = require('../service/application');
 const { checkHasSignIn } = require('../middleware/check');
 
 const router = new Router();
@@ -252,6 +253,77 @@ router
               ctx.body = {
                 success: true,
                 msg: '删除成功',
+              };
+            })
+            .catch(({ message }) => {
+              ctx.body = {
+                success: false,
+                msg: message,
+              };
+            });
+        }
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .get('/:id/job/:jobId', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    const { id: companyId, jobId } = ctx.params;
+    await companyModel
+      .findById(companyId)
+      .then(async (company) => {
+        if (company.admin.toString() !== userid) {
+          ctx.body = {
+            success: false,
+            msg: '权限不足',
+          };
+        } else {
+          await applicationModel
+            .findByJob(jobId)
+            .then((applications) => {
+              ctx.body = {
+                success: true,
+                msg: applications,
+              };
+            })
+            .catch(({ message }) => {
+              ctx.body = {
+                success: false,
+                msg: message,
+              };
+            });
+        }
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .post('/:id/job/:jobId/application', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    const { id: companyId } = ctx.params;
+    const { applicationId, status } = ctx.request.body;
+    await companyModel
+      .findById(companyId)
+      .then(async (company) => {
+        if (company.admin.toString() !== userid) {
+          ctx.body = {
+            success: false,
+            msg: '权限不足',
+          };
+        } else {
+          await applicationModel
+            .updateById(applicationId, status)
+            .then(() => {
+              ctx.body = {
+                success: true,
+                msg: '成功',
               };
             })
             .catch(({ message }) => {

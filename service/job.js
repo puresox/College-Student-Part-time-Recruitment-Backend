@@ -13,6 +13,16 @@ module.exports = {
     const result = await Job.find({ company });
     return result;
   },
+  findOfDefault: async () => {
+    const result = await Job.find().limit(10);
+    return result;
+  },
+  findByKeyword: async (keyword) => {
+    const result = await Job.find({
+      name: { $regex: keyword },
+    });
+    return result;
+  },
   updateById: async (id, info) => {
     const result = await Job.updateOne({ _id: id }, { $set: info });
     return result;

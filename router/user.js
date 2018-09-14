@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const userModel = require('../service/user');
 const companyModel = require('../service/company');
+const applicationModel = require('../service/application');
 const { checkHasSignIn } = require('../middleware/check');
 
 const router = new Router();
@@ -36,6 +37,23 @@ router
         ctx.body = {
           success: true,
           msg: companies,
+        };
+      })
+      .catch(({ message }) => {
+        ctx.body = {
+          success: false,
+          msg: message,
+        };
+      });
+  })
+  .get('/application', async (ctx) => {
+    const userid = ctx.cookies.get('userid');
+    await applicationModel
+      .findByUser(userid)
+      .then((applications) => {
+        ctx.body = {
+          success: true,
+          msg: applications,
         };
       })
       .catch(({ message }) => {
