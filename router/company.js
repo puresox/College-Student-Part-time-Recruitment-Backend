@@ -113,7 +113,7 @@ router
     await companyModel
       .findById(companyId)
       .then(async (company) => {
-        if (company.admin.toString() !== userid) {
+        if (company.admin.toString() !== userid.toString()) {
           ctx.body = {
             success: false,
             msg: '权限不足',
@@ -151,7 +151,7 @@ router
     await companyModel
       .findById(companyId)
       .then(async (company) => {
-        if (company.admin.toString() !== userid) {
+        if (company.admin.toString() !== userid.toString()) {
           ctx.body = {
             success: false,
             msg: '权限不足',
@@ -198,7 +198,7 @@ router
     await companyModel
       .findById(companyId)
       .then(async (company) => {
-        if (company.admin.toString() !== userid) {
+        if (company.admin.toString() !== userid.toString()) {
           ctx.body = {
             success: false,
             msg: '权限不足',
@@ -241,7 +241,7 @@ router
     await companyModel
       .findById(companyId)
       .then(async (company) => {
-        if (company.admin.toString() !== userid) {
+        if (company.admin.toString() !== userid.toString()) {
           ctx.body = {
             success: false,
             msg: '权限不足',
@@ -276,7 +276,7 @@ router
     await companyModel
       .findById(companyId)
       .then(async (company) => {
-        if (company.admin.toString() !== userid) {
+        if (company.admin.toString() !== userid.toString()) {
           ctx.body = {
             success: false,
             msg: '权限不足',
@@ -312,7 +312,7 @@ router
     await companyModel
       .findById(companyId)
       .then(async (company) => {
-        if (company.admin.toString() !== userid) {
+        if (company.admin.toString() !== userid.toString()) {
           ctx.body = {
             success: false,
             msg: '权限不足',
